@@ -1,81 +1,75 @@
-=== Send Orders to Google Sheets for WooCommerce===
+=== SheetMora ===
 Contributors: wpmethods, ajharrashed
-Tags: google sheet woocommerce, integrate google sheet, google sheets, google sheet
+Tags: woocommerce, google sheets, orders, integration
 Requires at least: 5.9
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Requires Plugins: woocommerce
+Stable tag: 1.0.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-The ultimate solution for automatically syncing WooCommerce orders to Google Sheets.
+Automatically send selected WooCommerce order fields to one Google Sheet when matching order statuses change.
 
 == Description ==
-Streamline your order management, reporting, and data analysis with seamless, real-time integration between your WooCommerce store and Google Sheets.
 
+Send orders to a Google spreadsheet you control using a Google Apps Script web app deployed in that spreadsheet.
 
-= Features =
-✅ Real-time Order Updates: Automatically sends order data to Google Sheets when order status changes
-✅ Customizable Triggers: Choose which order statuses trigger data transfer (processing, completed, etc.)
-✅ Reliable Delivery: Built-in error handling and logging for failed submissions
-✅ Category-based Filtering: Send orders only from specific product categories
-✅ Status-based Selection: Control exactly which order statuses trigger data transfer
-✅ Flexible Configuration: Mix and match filters for precise control over which orders get synced
-✅ Essential Order Details: Order ID, Date, Status, and Amount
-✅ Customer Information: Billing Name, Email, Phone, and Address
-✅ Product Data: Product Names, Categories, and Quantity details
-✅ Currency Support: Order amounts with currency symbols (e.g., $399.00, €299.00)
-✅ Clean Data Formatting: Properly formatted addresses, dates, and currency values
-✅ Auto-generated Scripts: Plugin generates ready-to-use Google Apps Script code
-✅ One-Click Deployment: Copy-paste setup with no coding required
-✅ Smart Sheet Management: Auto-creates headers and manages existing order updates
+= Free features =
+* Single Sheet: all matching orders go to the WooCommerce Orders tab.
+* Update an existing row by Order ID instead of inserting duplicate orders.
+* Choose trigger statuses and filter orders by product categories.
+* Select order, billing, product, shipping and discount fields.
+* Generate an authenticated Google Apps Script receiver.
+* Background delivery with up to three attempts per destination.
+* Formula injection protection, locked writes and header validation.
+* WooCommerce High-Performance Order Storage compatibility.
 
+= Optional separate Pro add-on =
+The separately distributed [Pro add-on](https://wpmethods.com/product/sheetmora/) adds Google OAuth connection and direct Sheets API delivery without Apps Script, category-wise sheets, daily/weekly/monthly sheets, custom sheet naming, extra fields and independent sheet configurations with optional webhook forwarding. Each configuration has its own destination, fields and filters. Premium implementations are not included in this free plugin.
 
-= ★ Pro Features =
-✅ Daily/Weekly/Monthly Sheets - Auto creation
-✅ Product-wise Sheets - Category based
-✅ Custom Sheet Naming - Flexible templates
-✅ Custom Webhook - Send data to external services
-✅ Priority Support - Fast help
+= External services and privacy =
+This plugin uses Google Apps Script and Google Sheets. After you save a destination and an order enters a selected status, it sends the selected order fields (including the required Order ID, amount, billing name, status, creation date and product name) and an authentication secret to your configured HTTPS script.google.com web app. Optional selected columns can contain personal information such as email, phone, address and customer notes. Failed submissions may be retried up to three times. Data is stored in your Google spreadsheet according to your Google account permissions. No order data is sent to WP Methods by the free plugin.
 
+Google service information: https://developers.google.com/apps-script/overview
+Google Terms: https://policies.google.com/terms
+Google Privacy Policy: https://policies.google.com/privacy
 
-Get The Pro Plugin [WP Methods](https://wpmethods.com/product/send-orders-to-google-sheets-for-woocommerce)
+The store owner is responsible for restricting spreadsheet access, keeping the generated script private and updating their privacy policy as appropriate.
 
-🎁If you like this plugin, consider supporting development: [Donate](https://buymeacoffee.com/ajharrashed)
-
+= Source =
+Readable JavaScript and CSS are included in assets/. No build process is required. The plugin uses WordPress.org updates; it does not install or update code from a third-party server.
 
 == Installation ==
-1. Upload the ‘google-sheets-integration-for-woo’ folder to the ‘/wp-content/plugins/’ directory
-2. Activate the plugin through the ‘Plugins’ menu in WordPress
-
-
-Getting Started
-
-1. Just go to WP-Admin>WC Orders to Google Sheets and Active Features.
+1. Install and activate WooCommerce.
+2. Upload the sheetmora folder to /wp-content/plugins/ and activate the plugin.
+3. Open SheetMora, choose statuses, categories and fields, then save.
+4. Generate the script. In a new Google spreadsheet, open Extensions > Apps Script and paste the entire generated code.
+5. Deploy as a web app: execute as yourself, access Anyone. The receiver authenticates requests with the generated secret.
+6. Save the deployed https://script.google.com/macros/s/DEPLOYMENT_ID/exec URL in the plugin settings.
+7. Move an order into a selected status and allow the background task to run.
 
 == Frequently Asked Questions ==
 
-= How can i use this plugin =
+= Is Single Sheet free? =
+Yes. The free plugin is fully functional with one destination and one WooCommerce Orders tab. Pro features are supplied by a separate add-on.
 
-First, Install this plugin from your wordpress dashboard. Then go to settings > WC to Google Sheets. And here you can set the features you want.
+= How does the category filter work? =
+An order is sent when it contains at least one selected category. Leave the filter empty to include all categories. This filter does not create separate category tabs in the free plugin.
 
-= Is it possible to use without WooCommerce plugin? =
+= Does SheetMora import settings from the previously named plugin? =
+No. Configure SheetMora, activate your Pro license if applicable, reconnect Google and generate/deploy a SheetMora receiver for manual delivery. Settings, encryption formats, queued jobs and receiver metadata from the previous identity are not imported or supported.
 
-No, You must install and active woocommerce plugin to make this plugin work.
+= What if I change fields or sheet settings? =
+Save your settings, generate the script again and deploy a new version. A different column schema requires a matching tab or a new spreadsheet. The receiver refuses mismatched headers to protect existing data.
 
-== Screenshots ==
-
-1. Send order data to google sheet
-2. Configuration Status
-3. Trigger Order Statuses & Sheet Mode
-4. Product Categories Filter - Send Data from Activate Categories
-5. Checkout Fields - Active if you want to show on the google sheet
-6. Auto Generate Google App Script
+= Why has an order not arrived? =
+Confirm the order status and category filters match, the web app is deployed with the documented access, and the current script version and headers match saved settings. Check WooCommerce > Status > Scheduled Actions and Logs (source sm). WP-Cron must run if Action Scheduler is unavailable. Pending jobs recheck current settings and do not send orders that no longer match.
 
 == Changelog ==
-= 1.0.2 =
-* Fix some links
-= 1.0.1 =
-* Fix some minor bugs
+
 = 1.0.0 =
-* Plugin initial release
+* Initial public release.
+* Single Sheet order sync with authenticated Apps Script delivery, field selection and category/status filters.
+* Background retries, formula injection protection and HPOS support.
+* Settings shortcut, documentation and optional product/support links.

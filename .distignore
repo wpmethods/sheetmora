@@ -1,0 +1,13 @@
+.git
+.github
+.agents
+.codex
+.tests
+.tests-output
+.distignore
+phpcs.xml.dist
+tests
+scripts
+dist
+documentation
+SM-DEVELOPMENT.md
